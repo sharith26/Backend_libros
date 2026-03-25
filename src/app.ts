@@ -2,7 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import helmet from 'helmet';
-import UserRouter from "./modules/users/users.routes";
+import v1Routes from "./api/v1/index";
+// import { errorMiddleware } from "./middlewares/error.middleware";
+
 
 export const app = express();
 
@@ -11,4 +13,7 @@ app.use(cors());
 app.use(compression());
 app.use(express.json());
 
-app.use('/users',UserRouter);
+app.use('/api/v1', v1Routes);
+
+// app.use(errorMiddleware);
+
