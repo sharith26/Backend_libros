@@ -8,6 +8,7 @@ const bootstrap = async ()=>{
     
     app.listen(env.port, ()=>{
         console.log(`Servidor corriendo en puerto ${env.port}`);
+        console.log('Env:', process.env.MONGO_URI)
     })
 
 }
