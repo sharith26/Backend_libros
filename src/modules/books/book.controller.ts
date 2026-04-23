@@ -4,6 +4,7 @@ import * as service from "./book.service";
 // Crear
 export const create = async (req: Request, res: Response) => {
   try {
+    // Aquí viajan nombre, tipo, paginas, isbn, tapa, formato, etc.
     const result = await service.createBook(req.body);
     res.status(201).json(result);
   } catch (error) {
@@ -25,7 +26,6 @@ export const getAll = async (_req: Request, res: Response) => {
 export const getById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
-
     const result = await service.getBookById(id);
     res.json(result);
   } catch (error) {
@@ -37,7 +37,7 @@ export const getById = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
-
+    // req.body permite enviar los campos nuevos para actualizar
     const result = await service.updateBook(id, req.body);
     res.json(result);
   } catch (error) {
@@ -49,7 +49,6 @@ export const update = async (req: Request, res: Response) => {
 export const remove = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
-
     const result = await service.deleteBook(id);
     res.json(result);
   } catch (error) {

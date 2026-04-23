@@ -11,3 +11,11 @@ router.use('/auth', AuthRouter);
 router.use('/users', UserRouter);
 
 export default router;
+
+const express = require('express');
+const cors = require('cors'); 
+const app = express();
+
+app.use(cors()); 
+app.use(express.json());
+

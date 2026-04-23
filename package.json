@@ -24,6 +24,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
+    "mongoose": "^9.4.1",
     "npm": "^11.12.1",
     "run": "^1.5.0",
     "ts-node": "^10.9.2",
