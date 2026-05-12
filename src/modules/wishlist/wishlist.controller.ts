@@ -15,6 +15,11 @@ export const WishlistController = {
     async add(req: Request, res: Response) {
         try {
             const { libroId, prioridad, notas } = req.body;
+            
+            if (!libroId) {
+                return res.status(400).json({ ok: false, msg: 'El ID del libro es obligatorio' });
+            }
+
             const usuarioId = (req as any).user.id;
             const item = await WishlistService.addToWishlist(usuarioId, libroId, prioridad, notas);
             res.status(201).json({ ok: true, item });
@@ -25,10 +30,16 @@ export const WishlistController = {
 
     async update(req: Request, res: Response) {
         try {
-            const id = req.params.id as string; // Solución al error de tipo
+            const id = req.params.id as string; 
             const { prioridad, notas } = req.body;
             const usuarioId = (req as any).user.id;
+
             const item = await WishlistService.updateWishlistItem(usuarioId, id, { prioridad, notas });
+            
+            if (!item) {
+                return res.status(404).json({ ok: false, msg: 'No se encontró el ítem para actualizar' });
+            }
+
             res.json({ ok: true, item });
         } catch (error) {
             res.status(500).json({ ok: false, msg: 'Error al actualizar' });
@@ -37,9 +48,15 @@ export const WishlistController = {
 
     async delete(req: Request, res: Response) {
         try {
-            const id = req.params.id as string; // Solución al error de tipo
+            const id = req.params.id as string; 
             const usuarioId = (req as any).user.id;
-            await WishlistService.removeFromWishlist(usuarioId, id);
+            
+            const result = await WishlistService.removeFromWishlist(usuarioId, id);
+            
+            if (!result) {
+                return res.status(404).json({ ok: false, msg: 'El ítem no existe o ya fue eliminado' });
+            }
+
             res.json({ ok: true, msg: 'Libro eliminado de favoritos' });
         } catch (error) {
             res.status(500).json({ ok: false, msg: 'Error al eliminar' });

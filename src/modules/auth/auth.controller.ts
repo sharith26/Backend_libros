@@ -15,7 +15,6 @@ export class AuthController {
 
     async getProfile(req: Request, res: Response) {
         try {
-            // En un CRUD real, buscarías al usuario en MongoDB usando req.user.id
             res.status(200).json({ ok: true, user: { nombre: "Sharith", email: "sharith@gmail.com" } });
         } catch (e) { res.status(500).json({ ok: false }); }
     }

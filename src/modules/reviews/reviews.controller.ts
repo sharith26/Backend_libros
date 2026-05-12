@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-// Importa aquí tu modelo de Reviews de MongoDB
 
 export class ReviewController {
     
     async getAll(req: Request, res: Response) {
         try {
-            // Aquí irá la lógica de búsqueda en MongoDB Atlas
             res.status(200).json({ ok: true, data: [] });
         } catch (error) {
             res.status(500).json({ ok: false, msg: 'Error al obtener reseñas' });
@@ -34,7 +32,6 @@ export class ReviewController {
         try {
             const { id } = req.params;
             const body = req.body;
-            // Lógica para actualizar en la DB
             res.status(200).json({ ok: true, msg: 'Reseña actualizada', id });
         } catch (error) {
             res.status(500).json({ ok: false, msg: 'Error al actualizar' });

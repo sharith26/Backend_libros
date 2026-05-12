@@ -9,7 +9,6 @@ export class BookRepository {
         return await newBook.save();
     }
 
-    // Obtener todos los libros (Catálogo)
     async findAll() {
         return await BookModel.find();
     }
@@ -28,7 +27,6 @@ export class BookRepository {
         });
     }
 
-    // Eliminar un libro
     async delete(id: string) {
         return await BookModel.findByIdAndDelete(id);
     }

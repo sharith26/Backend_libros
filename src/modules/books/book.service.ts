@@ -6,7 +6,6 @@ import { BookRepository } from "./book.repository";
 export class BookService {
     private repository = new BookRepository();
 
-    // --- Métodos de tu clase original ---
     async getAllBooks() {
         return await this.repository.findAll();
     }

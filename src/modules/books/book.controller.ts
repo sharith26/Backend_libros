@@ -4,7 +4,6 @@ import * as service from "./book.service";
 // Crear
 export const create = async (req: Request, res: Response) => {
   try {
-    // Aquí viajan nombre, tipo, paginas, isbn, tapa, formato, etc.
     const result = await service.createBook(req.body);
     res.status(201).json(result);
   } catch (error) {
@@ -12,7 +11,6 @@ export const create = async (req: Request, res: Response) => {
   }
 };
 
-// Obtener todos
 export const getAll = async (_req: Request, res: Response) => {
   try {
     const result = await service.getBooks();
@@ -22,7 +20,6 @@ export const getAll = async (_req: Request, res: Response) => {
   }
 };
 
-// Obtener por ID
 export const getById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
@@ -33,7 +30,6 @@ export const getById = async (req: Request, res: Response) => {
   }
 };
 
-// Actualizar
 export const update = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
@@ -45,7 +41,6 @@ export const update = async (req: Request, res: Response) => {
   }
 };
 
-// Eliminar
 export const remove = async (req: Request, res: Response) => {
   try {
     const id = req.params.id as string;
