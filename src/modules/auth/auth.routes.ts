@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AuthController } from "./auth.controller";
+import { authMiddleware } from "../../middlewares/auth.middleware";
 
 const router = Router();
 const _AuthController = new AuthController();
@@ -8,43 +9,24 @@ const _AuthController = new AuthController();
  * @openapi
  * /auth/register:
  *   post:
- *     tags:
- *       - Auth
- *     summary: "Registrar nuevo usuario en la biblioteca"
- *     description: "Crea una cuenta para que el usuario pueda gestionar su biblioteca inteligente de libros."
+ *     tags: [Auth]
+ *     summary: Registrar usuario
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - nombre
- *               - email
- *               - password
  *             properties:
  *               nombre:
  *                 type: string
- *                 example: "Sharith"
  *               email:
  *                 type: string
- *                 example: "sharith@gmail.com"
  *               password:
  *                 type: string
- *                 example: "sharith123"
- *               foto:
- *                 type: string
- *                 example: "https://avatar-url.com/perfil.png"
  *     responses:
  *       201:
- *         description: "Usuario registrado con éxito"
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
- *       400:
- *         description: "Datos inválidos o el correo ya existe"
- *     security: [] 
+ *         description: Éxito
  */
 router.post('/register', _AuthController.register);
 
@@ -52,10 +34,8 @@ router.post('/register', _AuthController.register);
  * @openapi
  * /auth/login:
  *   post:
- *     tags:
- *       - Auth
- *     summary: "Iniciar sesión con Google"
- *     description: "Autentica al usuario utilizando el token de Google para acceder a su colección de libros."
+ *     tags: [Auth]
+ *     summary: Login
  *     requestBody:
  *       required: true
  *       content:
@@ -63,20 +43,65 @@ router.post('/register', _AuthController.register);
  *           schema:
  *             type: object
  *             properties:
- *               token:
+ *               email:
  *                 type: string
- *                 description: "Token de Google proporcionado por el frontend de Angular"
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
- *         description: "Login exitoso"
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
- *       401:
- *         description: "No autorizado - Credenciales incorrectas"
- *     security: []
+ *         description: Éxito
  */
 router.post('/login', _AuthController.login);
+
+/**
+ * @openapi
+ * /auth/profile:
+ *   get:
+ *     tags: [Auth]
+ *     summary: Perfil del usuario
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Éxito
+ */
+router.get('/profile', authMiddleware, _AuthController.getProfile);
+
+/**
+ * @openapi
+ * /auth/update:
+ *   put:
+ *     tags: [Auth]
+ *     summary: Actualizar usuario
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Éxito
+ */
+router.put('/update', authMiddleware, _AuthController.updateUser);
+
+/**
+ * @openapi
+ * /auth/delete:
+ *   delete:
+ *     tags: [Auth]
+ *     summary: Borrar usuario
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Éxito
+ */
+router.delete('/delete', authMiddleware, _AuthController.deleteUser);
 
 export default router;

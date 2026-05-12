@@ -5,12 +5,12 @@ const router = Router();
 
 /**
  * @openapi
- * /projects:
+ * /books:
  *   post:
  *     tags:
- *       - Projects
- *     summary: "Crear proyecto"
- *     description: "Permite registrar un nuevo libro en la biblioteca inteligente."
+ *       - Books
+ *     summary: Crear libro
+ *     description: Permite registrar un nuevo libro.
  *     requestBody:
  *       required: true
  *       content:
@@ -19,23 +19,23 @@ const router = Router();
  *             $ref: '#/components/schemas/Book'
  *     responses:
  *       201:
- *         description: "Proyecto creado exitosamente"
+ *         description: Libro creado exitosamente
  *       400:
- *         description: "Error en la validación de datos"
+ *         description: Error en la validación
  */
 router.post("/", controller.create);
 
 /**
  * @openapi
- * /projects:
+ * /books:
  *   get:
  *     tags:
- *       - Projects
- *     summary: "Obtener proyectos"
- *     description: "Retorna la lista completa de libros registrados por el usuario."
+ *       - Books
+ *     summary: Obtener libros
+ *     description: Retorna todos los libros registrados.
  *     responses:
  *       200:
- *         description: "Lista de proyectos obtenida correctamente"
+ *         description: Lista de libros
  *         content:
  *           application/json:
  *             schema:
@@ -47,33 +47,32 @@ router.get("/", controller.getAll);
 
 /**
  * @openapi
- * /projects/{id}:
+ * /books/{id}:
  *   get:
  *     tags:
- *       - Projects
- *     summary: "Obtener proyecto por ID"
+ *       - Books
+ *     summary: Obtener libro por ID
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
- *         description: "ID único del libro/proyecto"
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: "Detalle del proyecto encontrado"
+ *         description: Libro encontrado
  *       404:
- *         description: "Proyecto no encontrado"
+ *         description: Libro no encontrado
  */
 router.get("/:id", controller.getById);
 
 /**
  * @openapi
- * /projects/{id}:
+ * /books/{id}:
  *   put:
  *     tags:
- *       - Projects
- *     summary: "Actualizar proyecto"
+ *       - Books
+ *     summary: Actualizar libro
  *     parameters:
  *       - name: id
  *         in: path
@@ -88,17 +87,17 @@ router.get("/:id", controller.getById);
  *             $ref: '#/components/schemas/Book'
  *     responses:
  *       200:
- *         description: "Proyecto actualizado correctamente"
+ *         description: Libro actualizado
  */
 router.put("/:id", controller.update);
 
 /**
  * @openapi
- * /projects/{id}:
+ * /books/{id}:
  *   delete:
  *     tags:
- *       - Projects
- *     summary: "Eliminar proyecto"
+ *       - Books
+ *     summary: Eliminar libro
  *     parameters:
  *       - name: id
  *         in: path
@@ -107,7 +106,7 @@ router.put("/:id", controller.update);
  *           type: string
  *     responses:
  *       200:
- *         description: "Proyecto eliminado correctamente"
+ *         description: Libro eliminado
  */
 router.delete("/:id", controller.remove);
 
