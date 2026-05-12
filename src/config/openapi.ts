@@ -7,7 +7,7 @@ export const openApiSpec = {
         info: {
             title: 'API Destellos de Tinta', 
             version: '1.0.0',
-            description: "Documentación de los endpoints de mi biblioteca inteligente"
+            description: "Documentación de los endpoints de mi libreria inteligente"    
         },
         servers: [
             {
@@ -125,5 +125,8 @@ export const openApiSpec = {
             }
         ]
     },
-    apis: [path.join(__dirname, '../modules/**/*.routes.{ts,js}')],
+apis: [
+    path.join(__dirname, "../modules/**/*.route*.ts"), // Detecta .route.ts y .routes.ts
+    path.join(__dirname, "../api/v1/*.ts")
+],
 };
