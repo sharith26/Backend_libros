@@ -125,8 +125,10 @@ export const openApiSpec = {
             }
         ]
     },
+// En tu archivo openapi.ts, cambia la línea de apis por esta:
 apis: [
-    path.join(__dirname, "../modules/**/*.route*.ts"), // Detecta .route.ts y .routes.ts
-    path.join(__dirname, "../api/v1/*.ts")
+    "./src/modules/**/*.ts", 
+    "./dist/modules/**/*.js", // Añade esta línea por si Render usa la versión compilada
+    "./src/api/v1/*.ts"
 ],
 };
