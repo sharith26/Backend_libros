@@ -51,7 +51,7 @@ router.post('/register', _AuthController.register);
  *       200:
  *         description: Éxito
  */
-router.post('/login', authMiddleware, _AuthController.login);
+router.post('/login', _AuthController.login);
 
 /**
  * @openapi

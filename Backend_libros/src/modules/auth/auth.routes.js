@@ -1,10 +1,10 @@
-import { Router } from "express";
-import { AuthController } from "./auth.controller";
-import { authMiddleware } from "../../middlewares/auth.middleware";
-
-const router = Router();
-const _AuthController = new AuthController();
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_controller_1 = require("./auth.controller");
+const auth_middleware_1 = require("../../middlewares/auth.middleware");
+const router = (0, express_1.Router)();
+const _AuthController = new auth_controller_1.AuthController();
 /**
  * @openapi
  * /auth/register:
@@ -29,7 +29,6 @@ const _AuthController = new AuthController();
  *         description: Éxito
  */
 router.post('/register', _AuthController.register);
-
 /**
  * @openapi
  * /auth/login:
@@ -51,8 +50,7 @@ router.post('/register', _AuthController.register);
  *       200:
  *         description: Éxito
  */
-router.post('/login', authMiddleware, _AuthController.login);
-
+router.post('/login', _AuthController.login);
 /**
  * @openapi
  * /auth/profile:
@@ -65,8 +63,7 @@ router.post('/login', authMiddleware, _AuthController.login);
  *       200:
  *         description: Éxito
  */
-router.get('/profile', authMiddleware, _AuthController.getProfile);
-
+router.get('/profile', auth_middleware_1.authMiddleware, _AuthController.getProfile);
 /**
  * @openapi
  * /auth/update:
@@ -88,8 +85,7 @@ router.get('/profile', authMiddleware, _AuthController.getProfile);
  *       200:
  *         description: Éxito
  */
-router.put('/update', authMiddleware, _AuthController.updateUser);
-
+router.put('/update', auth_middleware_1.authMiddleware, _AuthController.updateUser);
 /**
  * @openapi
  * /auth/delete:
@@ -102,6 +98,5 @@ router.put('/update', authMiddleware, _AuthController.updateUser);
  *       200:
  *         description: Éxito
  */
-router.delete('/delete', authMiddleware, _AuthController.deleteUser);
-
-export default router;
+router.delete('/delete', auth_middleware_1.authMiddleware, _AuthController.deleteUser);
+exports.default = router;

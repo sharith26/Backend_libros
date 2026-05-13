@@ -1,6 +1,5 @@
 import { AuthRepository } from "./auth.repository";
-// Importamos el User que ya tienes definido para evitar conflictos
-import { User } from "./auth.model"; 
+import { User } from "../users/users.model";
 import { hashPassword, comparePassword } from "../../libs/bcrypt";
 import { signToken } from "../../libs/jwt";
 
@@ -15,15 +14,12 @@ export class AuthService {
             throw new Error('el usuario ya existe');
         }
 
-        const hashedPassword = await hashPassword(user.password!);
+        const hashedPassword = await hashPassword(user.password);
 
-        const newUser: any = {
-            ...user,
-            password: hashedPassword,
-            role: 'user'
-        };
+        user.password = hashedPassword;
+        user.role = 'user';
 
-        const result = await this.repository.create(newUser);
+        const result = await this.repository.create(user);
 
         const token = signToken({
             sub: result._id!.toString(),
@@ -34,8 +30,8 @@ export class AuthService {
         return {
             user: {
                 id: result._id,
-                name: (result as any).nombre || (result as any).name,
-                email: result.email,
+                name: result.name,
+                email:result.email,
                 role: result.role
             },
             token,
@@ -48,13 +44,13 @@ export class AuthService {
             throw new Error('Usuario no existe');
         }
 
-        const isValidPassword = await comparePassword(data.password, user.password!);
+        const isValidPassword = await comparePassword(data.password, user.password);
 
-        if(!isValidPassword){
+         if(!isValidPassword){
             throw new Error('Credenciales son invalidas');
         }
 
-        const token = signToken({
+         const token = signToken({
             sub: user._id!.toString(),
             email: user.email,
             role: user.role
@@ -63,11 +59,12 @@ export class AuthService {
         return {
             user: {
                 id: user._id,
-                name: (user as any).nombre || (user as any).name,
-                email: user.email,
+                name: user.name,
+                email:user.email,
                 role: user.role
             },
             token,
         }
     }
+
 }

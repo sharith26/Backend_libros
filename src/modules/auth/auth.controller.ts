@@ -1,34 +1,112 @@
 import { Request, Response } from "express";
 
+import { AuthService }
+    from "./auth.service";
+
 export class AuthController {
-    async register(req: Request, res: Response) {
-        try {
-            res.status(201).json({ ok: true, msg: "Usuario registrado" });
-        } catch (e) { res.status(400).json({ ok: false }); }
-    }
 
-    async login(req: Request, res: Response) {
-        try {
-            res.status(200).json({ ok: true, token: "JWT_TOKEN_HERE" });
-        } catch (e) { res.status(401).json({ ok: false }); }
-    }
+    private service =
+        new AuthService();
 
-    async getProfile(req: Request, res: Response) {
+    register = async (
+        req: Request,
+        res: Response
+    ) => {
         try {
-            res.status(200).json({ ok: true, user: { nombre: "Sharith", email: "sharith@gmail.com" } });
-        } catch (e) { res.status(500).json({ ok: false }); }
-    }
 
-    async updateUser(req: Request, res: Response) {
-        try {
-            const updates = req.body;
-            res.status(200).json({ ok: true, msg: "Datos actualizados", updates });
-        } catch (e) { res.status(500).json({ ok: false }); }
-    }
+            const result =
+                await this.service.register(
+                    req.body
+                );
 
-    async deleteUser(req: Request, res: Response) {
+            res.status(201).json(result);
+
+        } catch (error: any) {
+
+            res.status(400).json({
+                ok: false,
+                message: error.message
+            });
+        }
+    };
+
+    login = async (
+        req: Request,
+        res: Response
+    ) => {
         try {
-            res.status(200).json({ ok: true, msg: "Usuario eliminado correctamente" });
-        } catch (e) { res.status(500).json({ ok: false }); }
-    }
+
+            const result =
+                await this.service.login(
+                    req.body
+                );
+
+            res.status(200).json(result);
+
+        } catch (error: any) {
+
+            res.status(401).json({
+                ok: false,
+                message: error.message
+            });
+        }
+    };
+
+    getProfile = async (
+        req: Request,
+        res: Response
+    ) => {
+        try {
+
+            res.status(200).json({
+                ok: true,
+                user: (req as any).user
+            });
+
+        } catch (error) {
+
+            res.status(500).json({
+                ok: false
+            });
+        }
+    };
+
+    updateUser = async (
+        req: Request,
+        res: Response
+    ) => {
+        try {
+
+            res.status(200).json({
+                ok: true,
+                msg: "Usuario actualizado",
+                data: req.body
+            });
+
+        } catch (error) {
+
+            res.status(500).json({
+                ok: false
+            });
+        }
+    };
+
+    deleteUser = async (
+        req: Request,
+        res: Response
+    ) => {
+        try {
+
+            res.status(200).json({
+                ok: true,
+                msg: "Usuario eliminado"
+            });
+
+        } catch (error) {
+
+            res.status(500).json({
+                ok: false
+            });
+        }
+    };
 }
