@@ -70,4 +70,34 @@ export class AuthService {
             token,
         }
     }
+
+    async getProfile(id: string) {
+        const user = await this.repository.findById(id);
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+        // Retornamos el usuario (el repositorio debería encargarse de limpiar el password)
+        return user;
+    }
+
+    async updateUser(id: string, data: any) {
+        // Si el usuario envía un nuevo password, lo encriptamos antes de guardar
+        if (data.password) {
+            data.password = await hashPassword(data.password);
+        }
+
+        const result = await this.repository.update(id, data);
+        if (!result) {
+            throw new Error('No se pudo actualizar el usuario');
+        }
+        return result;
+    }
+
+    async deleteUser(id: string) {
+        const result = await this.repository.delete(id);
+        if (!result) {
+            throw new Error('No se pudo eliminar el usuario o no existe');
+        }
+        return result;
+    }
 }
