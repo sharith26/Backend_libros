@@ -1,5 +1,6 @@
 import { ProgressModel } from "./progress.schema";
 import { Progress } from "./progress.model";
+import { ObjectId } from "mongodb";
 
 export class ProgressRepository {
     async updateProgress(data: Partial<Progress>) {
@@ -12,5 +13,9 @@ export class ProgressRepository {
 
     async findByUser(userId: string) {
         return await ProgressModel.find({ userId });
+    }
+
+    async deleteProgress(id: string) {
+        return await ProgressModel.findByIdAndDelete(id);
     }
 }

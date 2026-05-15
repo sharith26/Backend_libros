@@ -9,5 +9,9 @@ export const WishlistRepository = {
     },
     async delete(id: string) {
         return await WishlistModel.findByIdAndDelete(id);
+    },
+    // Añadido para complementar tu controlador
+    async update(id: string, data: any) {
+        return await WishlistModel.findByIdAndUpdate(id, data, { new: true });
     }
 };

@@ -10,7 +10,7 @@ const router = Router();
  *     tags:
  *       - Books
  *     summary: Crear libro
- *     description: Permite registrar un nuevo libro.
+ *     description: Registrar un nuevo libro en la biblioteca.
  *     requestBody:
  *       required: true
  *       content:
@@ -19,9 +19,7 @@ const router = Router();
  *             $ref: '#/components/schemas/Book'
  *     responses:
  *       201:
- *         description: Libro creado exitosamente
- *       400:
- *         description: Error en la validación
+ *         description: Libro creado correctamente
  */
 router.post("/", controller.create);
 
@@ -33,15 +31,22 @@ router.post("/", controller.create);
  *       - Books
  *     summary: Obtener libros
  *     description: Retorna todos los libros registrados.
+ *     parameters:
+ *       - in: query
+ *         name: genero
+ *         schema:
+ *           type: string
+ *         description: Filtrar por género
+ *
+ *       - in: query
+ *         name: autor
+ *         schema:
+ *           type: string
+ *         description: Filtrar por autor
+ *
  *     responses:
  *       200:
- *         description: Lista de libros
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Book'
+ *         description: Lista de libros obtenida correctamente
  */
 router.get("/", controller.getAll);
 
@@ -53,14 +58,16 @@ router.get("/", controller.getAll);
  *       - Books
  *     summary: Obtener libro por ID
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
+ *         description: ID del libro
  *     responses:
  *       200:
  *         description: Libro encontrado
+ *
  *       404:
  *         description: Libro no encontrado
  */
@@ -74,20 +81,23 @@ router.get("/:id", controller.getById);
  *       - Books
  *     summary: Actualizar libro
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
+ *         description: ID del libro
+ *
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Book'
+ *
  *     responses:
  *       200:
- *         description: Libro actualizado
+ *         description: Libro actualizado correctamente
  */
 router.put("/:id", controller.update);
 
@@ -99,14 +109,16 @@ router.put("/:id", controller.update);
  *       - Books
  *     summary: Eliminar libro
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
+ *         description: ID del libro
+ *
  *     responses:
  *       200:
- *         description: Libro eliminado
+ *         description: Libro eliminado correctamente
  */
 router.delete("/:id", controller.remove);
 

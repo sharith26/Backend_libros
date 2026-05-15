@@ -14,7 +14,9 @@ export class ReviewRepository {
     }
 
     async findByBook(bookId: string) {
-        return await ReviewModel.find({ libroId: bookId }).sort({ createdAt: -1 });
+        return await ReviewModel.find({ libroId: bookId })
+            .populate('usuarioId', 'nombre') // Agregado para ver quién comentó
+            .sort({ createdAt: -1 });
     }
 
     async update(id: string, usuarioId: string, data: Partial<Review>) {

@@ -7,8 +7,8 @@ export const WishlistController = {
             const usuarioId = (req as any).user.id;
             const list = await WishlistService.getUserWishlist(usuarioId);
             res.json({ ok: true, list });
-        } catch (error) {
-            res.status(500).json({ ok: false, msg: 'Error al obtener la lista' });
+        } catch (error: any) {
+            res.status(500).json({ ok: false, msg: 'Error al obtener la lista', error: error.message });
         }
     },
 
@@ -23,14 +23,14 @@ export const WishlistController = {
             const usuarioId = (req as any).user.id;
             const item = await WishlistService.addToWishlist(usuarioId, libroId, prioridad, notas);
             res.status(201).json({ ok: true, item });
-        } catch (error) {
-            res.status(500).json({ ok: false, msg: 'Error al agregar' });
+        } catch (error: any) {
+            res.status(500).json({ ok: false, msg: 'Error al agregar', error: error.message });
         }
     },
 
     async update(req: Request, res: Response) {
         try {
-            const id = req.params.id as string; 
+            const id = String(req.params.id); // Complemento: Asegura tipo string
             const { prioridad, notas } = req.body;
             const usuarioId = (req as any).user.id;
 
@@ -41,14 +41,14 @@ export const WishlistController = {
             }
 
             res.json({ ok: true, item });
-        } catch (error) {
-            res.status(500).json({ ok: false, msg: 'Error al actualizar' });
+        } catch (error: any) {
+            res.status(500).json({ ok: false, msg: 'Error al actualizar', error: error.message });
         }
     },
 
     async delete(req: Request, res: Response) {
         try {
-            const id = req.params.id as string; 
+            const id = String(req.params.id); // Complemento: Asegura tipo string
             const usuarioId = (req as any).user.id;
             
             const result = await WishlistService.removeFromWishlist(usuarioId, id);
@@ -58,8 +58,8 @@ export const WishlistController = {
             }
 
             res.json({ ok: true, msg: 'Libro eliminado de favoritos' });
-        } catch (error) {
-            res.status(500).json({ ok: false, msg: 'Error al eliminar' });
+        } catch (error: any) {
+            res.status(500).json({ ok: false, msg: 'Error al eliminar', error: error.message });
         }
     }
 };

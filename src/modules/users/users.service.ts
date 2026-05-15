@@ -1,21 +1,21 @@
 import { UsersRepository } from "./users.repository";
 
 export class UsersService {
-
-    private repository = new UsersRepository();
+    private _UsersRepository = new UsersRepository();
 
     async register(data: any) {
-
-        const exists = await this.repository.findByEmail(data.email);
-
-        if (exists) {
-            throw new Error('el usuario ya existe');
-        }
-        return this.repository.create(data);
+        return await this._UsersRepository.create(data);
     }
 
-    async findAllUsers() {
-        return this.repository.findAllUsers();
+    async findAllUsers(filters: any = {}) {
+        return await this._UsersRepository.findAllUsers(filters);
     }
 
+    async updateUser(id: string, data: any) {
+        return await this._UsersRepository.update(id, data);
+    }
+
+    async deleteUser(id: string) {
+        return await this._UsersRepository.delete(id);
+    }
 }

@@ -14,12 +14,29 @@ const _UsersController = new UsersController();
  *     tags:
  *       - Users
  *     summary: Registrar usuario
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nombre
+ *               - email
+ *               - password
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       201:
- *         description: Usuario registrado
+ *         description: Usuario creado
  */
 router.post(
-  '/register',
+  "/register",
   validate(createUserSchema),
   _UsersController.register
 );
@@ -33,11 +50,20 @@ router.post(
  *     summary: Obtener usuarios
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: nombre
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
- *         description: Lista de usuarios
+ *         description: OK
  */
-router.get('/', authMiddleware, _UsersController.findAllUsers);
+router.get("/", authMiddleware, _UsersController.findAllUsers);
 
 /**
  * @openapi
@@ -49,8 +75,8 @@ router.get('/', authMiddleware, _UsersController.findAllUsers);
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
@@ -62,13 +88,11 @@ router.get('/', authMiddleware, _UsersController.findAllUsers);
  *             properties:
  *               nombre:
  *                 type: string
- *               email:
- *                 type: string
  *     responses:
  *       200:
  *         description: Usuario actualizado
  */
-router.put('/:id', authMiddleware, _UsersController.update);
+router.put("/:id", authMiddleware, _UsersController.update);
 
 /**
  * @openapi
@@ -80,8 +104,8 @@ router.put('/:id', authMiddleware, _UsersController.update);
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
@@ -89,6 +113,6 @@ router.put('/:id', authMiddleware, _UsersController.update);
  *       200:
  *         description: Usuario eliminado
  */
-router.delete('/:id', authMiddleware, _UsersController.delete);
+router.delete("/:id", authMiddleware, _UsersController.delete);
 
 export default router;

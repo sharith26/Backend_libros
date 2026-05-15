@@ -10,12 +10,35 @@ const controller = new ProgressController();
  *   post:
  *     tags:
  *       - Progress
- *     summary: Crear progreso
+ *     summary: Crear o actualizar progreso
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - bookId
+ *               - paginaActual
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: "645a..."
+ *               bookId:
+ *                 type: string
+ *                 example: "645b..."
+ *               paginaActual:
+ *                 type: number
+ *                 example: 45
+ *               totalPaginas:
+ *                 type: number
+ *                 example: 300
  *     responses:
- *       201:
- *         description: Progreso creado
+ *       200:
+ *         description: Progreso guardado correctamente
  */
-router.post('/', controller.update);
+router.post("/", controller.update);
 
 /**
  * @openapi
@@ -23,18 +46,18 @@ router.post('/', controller.update);
  *   get:
  *     tags:
  *       - Progress
- *     summary: Obtener progreso
+ *     summary: Obtener progreso por Usuario
  *     parameters:
- *       - name: userId
- *         in: path
+ *       - in: path
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Progreso encontrado
+ *         description: Lista de progresos del usuario
  */
-router.get('/:userId', controller.getByUserId);
+router.get("/:userId", controller.getByUserId);
 
 /**
  * @openapi
@@ -42,18 +65,28 @@ router.get('/:userId', controller.getByUserId);
  *   put:
  *     tags:
  *       - Progress
- *     summary: Actualizar progreso
+ *     summary: Actualizar progreso por ID
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               paginaActual:
+ *                 type: number
+ *               totalPaginas:
+ *                 type: number
  *     responses:
  *       200:
  *         description: Progreso actualizado
  */
-router.put('/:id', controller.update);
+router.put("/:id", controller.update);
 
 /**
  * @openapi
@@ -63,8 +96,8 @@ router.put('/:id', controller.update);
  *       - Progress
  *     summary: Eliminar progreso
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
@@ -72,6 +105,6 @@ router.put('/:id', controller.update);
  *       200:
  *         description: Progreso eliminado
  */
-router.delete('/:id', controller.delete);
+router.delete("/:id", controller.delete);
 
 export default router;

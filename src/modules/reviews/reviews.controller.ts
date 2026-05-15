@@ -1,47 +1,64 @@
 import { Request, Response } from 'express';
+import { ReviewRepository } from './reviews.repository';
 
 export class ReviewController {
-    
-    async getAll(req: Request, res: Response) {
+    private repository = new ReviewRepository();
+
+    getAll = async (req: Request, res: Response) => {
         try {
-            res.status(200).json({ ok: true, data: [] });
+            const puntuacion = req.query.puntuacion ? String(req.query.puntuacion) : undefined;
+            const usuarioId = req.query.usuarioId ? String(req.query.usuarioId) : undefined;
+
+            const reviews = await this.repository.findAll(); 
+            res.status(200).json({ ok: true, data: reviews });
         } catch (error) {
             res.status(500).json({ ok: false, msg: 'Error al obtener reseñas' });
         }
     }
 
-    async create(req: Request, res: Response) {
+    create = async (req: Request, res: Response) => {
         try {
-            const body = req.body;
-            res.status(201).json({ ok: true, msg: 'Reseña creada', data: body });
+            const usuarioId = (req as any).user.id;
+            const data = { ...req.body, usuarioId };
+            const result = await this.repository.create(data);
+            res.status(201).json({ ok: true, msg: 'Reseña creada', data: result });
         } catch (error) {
             res.status(400).json({ ok: false, msg: 'Error al crear' });
         }
     }
 
-    async getByBook(req: Request, res: Response) {
+    getByBook = async (req: Request, res: Response) => {
         try {
-            const { bookId } = req.params;
-            res.status(200).json({ ok: true, bookId });
+            const bookId = String(req.params.bookId);
+            const reviews = await this.repository.findByBook(bookId);
+            res.status(200).json({ ok: true, data: reviews });
         } catch (error) {
             res.status(404).json({ ok: false, msg: 'No encontrado' });
         }
     }
 
-    async update(req: Request, res: Response) {
+    update = async (req: Request, res: Response) => {
         try {
-            const { id } = req.params;
-            const body = req.body;
-            res.status(200).json({ ok: true, msg: 'Reseña actualizada', id });
+            const id = String(req.params.id);
+            const usuarioId = (req as any).user.id;
+            const result = await this.repository.update(id, usuarioId, req.body);
+            
+            if (!result) return res.status(403).json({ ok: false, msg: 'No autorizado o no existe' });
+            
+            res.status(200).json({ ok: true, msg: 'Reseña actualizada', data: result });
         } catch (error) {
             res.status(500).json({ ok: false, msg: 'Error al actualizar' });
         }
     }
 
-    async delete(req: Request, res: Response) {
+    delete = async (req: Request, res: Response) => {
         try {
-            const { id } = req.params;
-            // Lógica para eliminar de la DB
+            const id = String(req.params.id);
+            const usuarioId = (req as any).user.id;
+            const result = await this.repository.delete(id, usuarioId);
+
+            if (!result) return res.status(403).json({ ok: false, msg: 'No autorizado' });
+
             res.status(200).json({ ok: true, msg: 'Reseña eliminada' });
         } catch (error) {
             res.status(500).json({ ok: false, msg: 'Error al eliminar' });

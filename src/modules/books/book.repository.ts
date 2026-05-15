@@ -3,17 +3,29 @@ import { Book } from "./book.model";
 
 export class BookRepository {
     
-    // Crear un nuevo libro
     async create(data: Book) {
         const newBook = new BookModel(data);
         return await newBook.save();
     }
 
-    async findAll() {
-        return await BookModel.find();
+    async findAll(filters: any = {}) {
+        const query: any = {};
+
+        if (filters.genero) {
+            query.Genero = { $regex: filters.genero, $options: 'i' };
+        }
+
+        if (filters.autor) {
+            query.Autor = { $regex: filters.autor, $options: 'i' };
+        }
+
+        if (filters.estado) {
+            query.Estado = filters.estado;
+        }
+
+        return await BookModel.find(query);
     }
 
-    // Buscar por ID
     async findById(id: string) {
         return await BookModel.findById(id);
     }

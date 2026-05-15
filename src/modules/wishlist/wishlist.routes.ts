@@ -10,17 +10,41 @@ const router = Router();
  *   get:
  *     summary: Obtener mi lista de deseos
  *     description: Retorna todos los libros favoritos del usuario.
- *     tags: [Wishlist]
+ *     tags:
+ *       - Wishlist
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: prioridad
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - Baja
+ *             - Media
+ *             - Alta
+ *         description: Filtrar por prioridad
+ *
+ *       - in: query
+ *         name: libroId
+ *         schema:
+ *           type: string
+ *         description: Filtrar por ID del libro
+ *
  *     responses:
  *       200:
  *         description: Lista obtenida con éxito
- *
+ */
+router.get("/", authMiddleware, WishlistController.get);
+
+/**
+ * @openapi
+ * /wishlist:
  *   post:
  *     summary: Agregar libro a favoritos
  *     description: Guarda un libro en la lista de deseos.
- *     tags: [Wishlist]
+ *     tags:
+ *       - Wishlist
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -44,12 +68,11 @@ const router = Router();
  *                 example: "Alta"
  *               notas:
  *                 type: string
- *                 example: "Leer después de Oscuro"
+ *                 example: "Leer después de Jane Austen"
  *     responses:
  *       201:
  *         description: Libro agregado a la lista
  */
-router.get("/", authMiddleware, WishlistController.get);
 router.post("/", authMiddleware, WishlistController.add);
 
 /**
@@ -57,8 +80,8 @@ router.post("/", authMiddleware, WishlistController.add);
  * /wishlist/{id}:
  *   put:
  *     summary: Actualizar prioridad o notas
- *     description: Modifica datos de un libro en wishlist.
- *     tags: [Wishlist]
+ *     tags:
+ *       - Wishlist
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -67,7 +90,6 @@ router.post("/", authMiddleware, WishlistController.add);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID del registro wishlist
  *     requestBody:
  *       required: true
  *       content:
@@ -80,15 +102,20 @@ router.post("/", authMiddleware, WishlistController.add);
  *                 example: "Media"
  *               notas:
  *                 type: string
- *                 example: "Ya lo compré"
+ *                 example: "Ya lo tengo en físico"
  *     responses:
  *       200:
  *         description: Item actualizado correctamente
- *
+ */
+router.put("/:id", authMiddleware, WishlistController.update);
+
+/**
+ * @openapi
+ * /wishlist/{id}:
  *   delete:
  *     summary: Quitar libro de favoritos
- *     description: Elimina un libro de la wishlist.
- *     tags: [Wishlist]
+ *     tags:
+ *       - Wishlist
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -101,7 +128,6 @@ router.post("/", authMiddleware, WishlistController.add);
  *       200:
  *         description: Libro eliminado correctamente
  */
-router.put("/:id", authMiddleware, WishlistController.update);
 router.delete("/:id", authMiddleware, WishlistController.delete);
 
 export default router;
