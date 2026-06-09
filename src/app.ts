@@ -19,10 +19,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-/* ✅ 2. PRE-FLIGHT EXPLÍCITO (CRÍTICO EN RENDER) */
-app.options('/*', cors());
-
-/* ✅ 3. MIDDLEWARES */
 app.use(express.json());
 app.use(compression());
 app.use(morgan('dev'));
