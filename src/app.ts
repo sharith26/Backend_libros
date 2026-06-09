@@ -1,9 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
-import helmet from 'helmet';
 import morgan from 'morgan';
-
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
@@ -13,24 +11,20 @@ import { openApiSpec } from './config/openapi';
 
 export const app = express();
 
-app.use(
-  helmet({
-    contentSecurityPolicy: false
-  })
-);
+app.use(cors({
+  origin: ['http://localhost:4200'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-app.use(morgan('dev'));
-app.use(cors());
-app.use(compression());
 app.use(express.json());
+app.use(morgan('dev'));
+app.use(compression());
 
 const specs = swaggerJsdoc(openApiSpec);
 
-app.use(
-  '/api/v1/docs',
-  swaggerUi.serve,
-  swaggerUi.setup(specs)
-);
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/api/v1', v1Routes);
 
