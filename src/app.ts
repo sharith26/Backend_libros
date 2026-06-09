@@ -11,21 +11,29 @@ import { openApiSpec } from './config/openapi';
 
 export const app = express();
 
+/* ✅ 1. CORS PRIMERO DE TODO */
 app.use(cors({
-  origin: ['http://localhost:4200'],
+  origin: 'http://localhost:4200',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json());
-app.use(morgan('dev'));
-app.use(compression());
+/* ✅ 2. PRE-FLIGHT EXPLÍCITO (CRÍTICO EN RENDER) */
+app.options('*', cors());
 
+/* ✅ 3. MIDDLEWARES */
+app.use(express.json());
+app.use(compression());
+app.use(morgan('dev'));
+
+/* Swagger */
 const specs = swaggerJsdoc(openApiSpec);
 
 app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
+/* Routes */
 app.use('/api/v1', v1Routes);
 
+/* Error handler al final */
 app.use(errorMiddleware);
