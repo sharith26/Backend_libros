@@ -11,36 +11,55 @@ import { openApiSpec } from './config/openapi';
 
 export const app = express();
 
-/* ✅ 1. CORS PRIMERO DE TODO */
+/* =========================
+   CORS (PRODUCCIÓN + LOCAL)
+========================= */
 app.use(cors({
-  origin: (origin, callback) => {
-    const allowedOrigins = [
-      'http://localhost:4200',
-      'https://backend-libros.onrender.com'
-    ];
-
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(null, true); // 👈 TEMPORAL (evita bloqueo en deploy)
-    }
-  },
+  origin: [
+    'http://localhost:4200'
+    // cuando tengas frontend en producción agrega aquí:
+    // 'https://tu-frontend.com'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 
+/* =========================
+   🔥 PREFLIGHT FIX (RENDER SAFE)
+========================= */
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+/* =========================
+   MIDDLEWARES
+========================= */
 app.use(express.json());
 app.use(compression());
 app.use(morgan('dev'));
 
-/* Swagger */
+/* =========================
+   SWAGGER
+========================= */
 const specs = swaggerJsdoc(openApiSpec);
 
 app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-/* Routes */
+/* =========================
+   ROUTES
+========================= */
 app.use('/api/v1', v1Routes);
 
-/* Error handler al final */
+/* =========================
+   ERROR HANDLER
+========================= */
 app.use(errorMiddleware);
