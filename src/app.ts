@@ -32,7 +32,6 @@ app.use(
   swaggerUi.setup(specs)
 );
 
-// Tus rutas
 app.use('/api/v1', v1Routes);
 
 app.use(errorMiddleware);
