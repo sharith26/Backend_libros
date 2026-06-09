@@ -13,7 +13,18 @@ export const app = express();
 
 /* ✅ 1. CORS PRIMERO DE TODO */
 app.use(cors({
-  origin: 'http://localhost:4200',
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:4200',
+      'https://backend-libros.onrender.com'
+    ];
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // 👈 TEMPORAL (evita bloqueo en deploy)
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
