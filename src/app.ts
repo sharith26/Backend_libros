@@ -20,7 +20,7 @@ app.use(cors({
 }));
 
 /* ✅ 2. PRE-FLIGHT EXPLÍCITO (CRÍTICO EN RENDER) */
-app.options('*', cors());
+app.options('/*', cors());
 
 /* ✅ 3. MIDDLEWARES */
 app.use(express.json());
