@@ -1,7 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
+import helmet from 'helmet';
 import morgan from 'morgan';
+
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
@@ -12,40 +14,41 @@ import { openApiSpec } from './config/openapi';
 export const app = express();
 
 /* =========================
-   CORS (PRODUCCIÓN + LOCAL)
+   SECURITY
 ========================= */
-app.use(cors({
-  origin: [
-    'http://localhost:4200'
-    // cuando tengas frontend en producción agrega aquí:
-    // 'https://tu-frontend.com'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(morgan('dev'));
 
 /* =========================
-   🔥 PREFLIGHT FIX (RENDER SAFE)
+   CORS (LOCAL + RENDER)
 ========================= */
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+const allowedOrigins = [
+  'http://localhost:4200',
+  'https://backend-libros.onrender.com'
+];
 
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
 
-  next();
-});
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(null, false);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.options('*', cors());
 
 /* =========================
    MIDDLEWARES
 ========================= */
-app.use(express.json());
 app.use(compression());
-app.use(morgan('dev'));
+app.use(express.json());
 
 /* =========================
    SWAGGER
