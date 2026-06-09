@@ -4,23 +4,19 @@ import compression from 'compression';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
-
 import v1Routes from "./api/v1/index";
 import { errorMiddleware } from "./middlewares/error.middleware";
-import { openApiSpec } from './config/openapi';
 
 export const app = express();
 
 /* =========================
-   SECURITY
+   SECURITY + LOGS
 ========================= */
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(morgan('dev'));
 
 /* =========================
-   CORS (LOCAL + RENDER)
+   CORS (CORRECTO)
 ========================= */
 const allowedOrigins = [
   'http://localhost:4200',
@@ -35,27 +31,18 @@ app.use(cors({
       return callback(null, true);
     }
 
-    return callback(null, false);
+    return callback(null, true);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.options('*', cors());
-
 /* =========================
    MIDDLEWARES
 ========================= */
 app.use(compression());
 app.use(express.json());
-
-/* =========================
-   SWAGGER
-========================= */
-const specs = swaggerJsdoc(openApiSpec);
-
-app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 /* =========================
    ROUTES
